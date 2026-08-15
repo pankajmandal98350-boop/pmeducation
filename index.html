@@ -9,12 +9,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-user-select: none; user-select: none; }
         body { background-color: #f1f5f9; padding-bottom: 75px; }
 
         /* Header */
         .top-nav { background: #115286; color: white; padding: 15px; display: flex; justify-content: center; align-items: center; }
-        .logo { font-weight: bold; font-size: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
+        .logo { font-weight: bold; font-size: 20px; display: flex; align-items: center; gap: 8px; }
 
         /* Banner */
         .banner-area { background: #115286; color: white; text-align: center; padding: 20px 15px 30px 15px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; margin-bottom: 15px; }
@@ -23,24 +23,29 @@
 
         /* Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 15px 15px 15px; }
-        .card { background: white; padding: 18px 10px; border-radius: 14px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.06); text-decoration: none; color: #333; position: relative; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
+        .card { background: white; padding: 18px 10px; border-radius: 14px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.06); color: #333; position: relative; font-size: 14px; font-weight: 600; cursor: pointer; }
         .card:active { transform: scale(0.97); }
         .card i { font-size: 28px; margin-bottom: 8px; }
         .badge { position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; }
         .bg-red { background: #ea4335; } .bg-green { background: #22c55e; } .bg-orange { background: #f97316; }
 
         /* Notice Board */
-        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; border-left: 5px solid #115286; box-shadow: 0 3px 8px rgba(0,0,0,0.06); font-size: 14px; line-height: 1.4; }
+        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; border-left: 5px solid #115286; box-shadow: 0 3px 8px rgba(0,0,0,0.06); font-size: 14px; }
         
         /* Modal (Popup for Lists) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; max-height: 80%; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; overflow-y: auto; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; max-height: 80%; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .modal-header h3 { font-size: 17px; color: #115286; }
         .close-btn { font-size: 24px; font-weight: bold; color: #666; border: none; background: none; cursor: pointer; }
         .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
         .item-title { font-size: 14px; font-weight: 600; color: #1e293b; }
-        .item-btn { background: #115286; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .item-btn { background: #115286; color: white; padding: 6px 14px; border-radius: 6px; border: none; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        /* In-App Fullscreen Secure PDF Viewer */
+        #pdfViewerScreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e293b; z-index: 200; flex-direction: column; }
+        .pdf-topbar { background: #0f172a; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .pdf-frame { width: 100%; height: calc(100% - 48px); border: none; }
 
         /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 50; }
@@ -49,7 +54,7 @@
         .nav-item i { font-size: 18px; margin-bottom: 2px; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <div class="top-nav">
         <div class="logo"><i class="fas fa-graduation-cap"></i> PM EDUCATION</div>
@@ -88,6 +93,15 @@
         </div>
     </div>
 
+    <!-- In-App Protected Viewer Screen -->
+    <div id="pdfViewerScreen">
+        <div class="pdf-topbar">
+            <span id="pdfViewerTitle">Study Material</span>
+            <button onclick="closePdfViewer()" style="background:#ef4444; color:white; border:none; padding:4px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Close</button>
+        </div>
+        <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
+    </div>
+
     <div class="bottom-nav">
         <a href="index.html" class="nav-item active"><i class="fas fa-home"></i><br>Home</a>
         <a href="#" onclick="openSection('paid_classes', 'Batches')" class="nav-item"><i class="fas fa-users"></i><br>Batches</a>
@@ -109,24 +123,22 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Realtime Notice
         db.ref('app_news').on('value', snap => {
             const val = snap.val();
             document.getElementById('liveNotice').innerText = val ? (val.content || "No update available") : "No update available";
         });
 
-        // Open Section List
         function openSection(path, title) {
             document.getElementById('modalTitle').innerText = title;
             const listContainer = document.getElementById('modalList');
-            listContainer.innerHTML = '<p style="text-align:center; color:#666;">Loading items...</p>';
+            listContainer.innerHTML = '<p style="text-align:center; color:#666;">Loading...</p>';
             document.getElementById('contentModal').style.display = 'flex';
 
             db.ref(path).once('value', snap => {
                 const data = snap.val();
                 listContainer.innerHTML = '';
                 if (!data) {
-                    listContainer.innerHTML = '<p style="text-align:center; color:#888; padding:20px 0;">Abhi is section me koi content uplabdh nahi hai.</p>';
+                    listContainer.innerHTML = '<p style="text-align:center; color:#888; padding:20px 0;">Abhi koi content uplabdh nahi hai.</p>';
                     return;
                 }
                 
@@ -135,9 +147,16 @@
                     if (item && item.title && item.url) {
                         const row = document.createElement('div');
                         row.className = 'item-row';
+                        
+                        // PDF sections ke liye In-App Protected Viewer
+                        const isPdfSection = ['pdf_notes', 'ebooks', 'syllabus'].includes(path);
+                        const clickAction = isPdfSection 
+                            ? `openProtectedPdf('${encodeURIComponent(item.url)}', '${encodeURIComponent(item.title)}')`
+                            : `window.open('${item.url}', '_blank')`;
+
                         row.innerHTML = `
                             <div class="item-title">${item.title}</div>
-                            <a href="${item.url}" target="_blank" class="item-btn">Open / View</a>
+                            <button class="item-btn" onclick="${clickAction}">Read Now</button>
                         `;
                         listContainer.appendChild(row);
                     }
@@ -145,9 +164,30 @@
             });
         }
 
+        function openProtectedPdf(rawUrl, title) {
+            let url = decodeURIComponent(rawUrl);
+            const decodedTitle = decodeURIComponent(title);
+            
+            // Google Drive direct preview link conversion
+            if (url.includes('drive.google.com')) {
+                url = url.replace(/\/view.*$/, '/preview');
+            }
+
+            document.getElementById('pdfViewerTitle').innerText = decodedTitle;
+            document.getElementById('pdfFrame').src = url;
+            document.getElementById('pdfViewerScreen').style.display = 'flex';
+            closeModal();
+        }
+
+        function closePdfViewer() {
+            document.getElementById('pdfFrame').src = '';
+            document.getElementById('pdfViewerScreen').style.display = 'none';
+        }
+
         function closeModal() {
             document.getElementById('contentModal').style.display = 'none';
         }
     </script>
 </body>
-</html>
+            </html>
+                                                                                                                                
