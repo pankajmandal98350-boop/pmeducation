@@ -12,37 +12,54 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-user-select: none; user-select: none; }
         body { background-color: #f1f5f9; padding-bottom: 75px; }
 
-        /* Header */
-        .top-nav { background: #115286; color: white; padding: 15px; display: flex; justify-content: center; align-items: center; }
-        .logo { font-weight: bold; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+        /* Top Header */
+        .top-nav { background: #115286; color: white; padding: 14px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; font-size: 19px; display: flex; align-items: center; gap: 8px; }
+        .header-icons i { font-size: 18px; margin-left: 15px; cursor: pointer; }
 
-        /* Banner */
-        .banner-area { background: #115286; color: white; text-align: center; padding: 20px 15px 30px 15px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; margin-bottom: 15px; }
-        .welcome-text h2 { font-size: 22px; margin-bottom: 5px; }
-        .welcome-text p { font-size: 13px; opacity: 0.9; }
+        /* RWA Style Hero Banner Slider */
+        .slider-container { width: 100%; padding: 12px 15px 5px 15px; position: relative; }
+        .slider-wrapper { width: 100%; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.12); position: relative; }
+        .slides { display: flex; transition: transform 0.5s ease-in-out; width: 100%; }
+        .slide { min-width: 100%; position: relative; }
+        .slide img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        
+        /* Banner Gradient Text Cards (Default placeholder banners) */
+        .banner-card { width: 100%; height: 150px; display: flex; flex-direction: column; justify-content: center; padding: 20px; color: white; box-sizing: border-box; }
+        .banner-1 { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
+        .banner-2 { background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%); }
+        .banner-3 { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .banner-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 5px; }
+        .banner-card p { font-size: 12px; opacity: 0.9; margin-bottom: 10px; }
+        .banner-btn { align-self: flex-start; background: #fbbf24; color: #111; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-decoration: none; }
 
-        /* Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 15px 15px 15px; }
-        .card { background: white; padding: 18px 10px; border-radius: 14px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.06); color: #333; position: relative; font-size: 14px; font-weight: 600; cursor: pointer; }
+        /* Slider Dots */
+        .dots { display: flex; justify-content: center; gap: 6px; margin-top: 8px; margin-bottom: 10px; }
+        .dot { width: 7px; height: 7px; background: #cbd5e1; border-radius: 50%; transition: all 0.3s; }
+        .dot.active { width: 20px; background: #115286; border-radius: 10px; }
+
+        /* Grid Section */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px 15px 15px; }
+        .card { background: white; padding: 16px 10px; border-radius: 12px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); color: #333; position: relative; font-size: 13px; font-weight: 600; cursor: pointer; }
         .card:active { transform: scale(0.97); }
-        .card i { font-size: 28px; margin-bottom: 8px; }
+        .card i { font-size: 26px; margin-bottom: 8px; }
         .badge { position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; }
         .bg-red { background: #ea4335; } .bg-green { background: #22c55e; } .bg-orange { background: #f97316; }
 
         /* Notice Board */
-        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; border-left: 5px solid #115286; box-shadow: 0 3px 8px rgba(0,0,0,0.06); font-size: 14px; }
+        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 12px 15px; border-radius: 10px; border-left: 4px solid #115286; box-shadow: 0 2px 6px rgba(0,0,0,0.05); font-size: 13px; }
         
-        /* Modal (Popup for Lists) */
+        /* Modal Popup */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: flex-end; }
         .modal-content { background: white; width: 100%; max-height: 80%; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .modal-header h3 { font-size: 17px; color: #115286; }
-        .close-btn { font-size: 24px; font-weight: bold; color: #666; border: none; background: none; cursor: pointer; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
-        .item-title { font-size: 14px; font-weight: 600; color: #1e293b; }
-        .item-btn { background: #115286; color: white; padding: 6px 14px; border-radius: 6px; border: none; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .modal-header h3 { font-size: 16px; color: #115286; }
+        .close-btn { font-size: 22px; font-weight: bold; color: #666; border: none; background: none; cursor: pointer; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px 14px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; }
+        .item-title { font-size: 13px; font-weight: 600; color: #1e293b; }
+        .item-btn { background: #115286; color: white; padding: 6px 12px; border-radius: 6px; border: none; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        /* In-App Fullscreen Secure PDF Viewer */
+        /* In-App Protected Viewer */
         #pdfViewerScreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e293b; z-index: 200; flex-direction: column; }
         .pdf-topbar { background: #0f172a; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
         .pdf-frame { width: 100%; height: calc(100% - 48px); border: none; }
@@ -56,17 +73,57 @@
 </head>
 <body oncontextmenu="return false;">
 
+    <!-- Top Header -->
     <div class="top-nav">
         <div class="logo"><i class="fas fa-graduation-cap"></i> PM EDUCATION</div>
-    </div>
-
-    <div class="banner-area">
-        <div class="welcome-text">
-            <h2>Welcome Student!</h2>
-            <p>PM EDUCATION - Apne sapno ko do nayi udaan</p>
+        <div class="header-icons">
+            <i class="fas fa-bell"></i>
         </div>
     </div>
 
+    <!-- RWA Style Hero Banner Slider -->
+    <div class="slider-container">
+        <div class="slider-wrapper">
+            <div class="slides" id="slideTrack">
+                <!-- Slide 1 -->
+                <div class="slide">
+                    <div class="banner-card banner-1">
+                        <h3>Target Batch 2026 🎯</h3>
+                        <p>Complete Class Notes & Chapter-wise Tests</p>
+                        <a href="#" onclick="openSection('paid_classes', 'Paid Classes')" class="banner-btn">Join Now 🔥</a>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <div class="banner-card banner-2">
+                        <h3>Free Mock Test Series 📝</h3>
+                        <p>Apni Taiyari Ko Parkhein Real Exam Level Par</p>
+                        <a href="#" onclick="openSection('free_tests', 'Free Test')" class="banner-btn">Attempt Free Test</a>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="slide">
+                    <div class="banner-card banner-3">
+                        <h3>PDF Notes & Study Material 📚</h3>
+                        <p>Handwritten & Topic-wise revision notes</p>
+                        <a href="#" onclick="openSection('pdf_notes', 'PDF Notes')" class="banner-btn">Open Notes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dots" id="dotsTrack">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- Notice -->
+    <div class="notice-box">
+        <b>📢 Notice:</b> <span id="liveNotice">Loading...</span>
+    </div>
+
+    <!-- Grid Menu -->
     <div class="grid">
         <div class="card" onclick="openSection('paid_classes', 'Paid Classes')"><span class="badge bg-orange">PREMIUM</span><i class="fas fa-laptop" style="color:#f97316;"></i><br>Paid Classes</div>
         <div class="card" onclick="openSection('free_classes', 'Free Courses')"><span class="badge bg-green">FREE</span><i class="fas fa-video" style="color:#22c55e;"></i><br>Free Courses</div>
@@ -78,10 +135,6 @@
         <div class="card" onclick="openSection('app_news', 'Latest News')"><i class="fas fa-newspaper" style="color:#f59e0b;"></i><br>Latest News</div>
     </div>
 
-    <div class="notice-box">
-        <b>📢 Notice Board:</b> <span id="liveNotice">Loading...</span>
-    </div>
-
     <!-- Popup Modal -->
     <div id="contentModal" class="modal">
         <div class="modal-content">
@@ -89,11 +142,11 @@
                 <h3 id="modalTitle">Study Material</h3>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div id="modalList">Data load ho raha hai...</div>
+            <div id="modalList">Loading...</div>
         </div>
     </div>
 
-    <!-- In-App Protected Viewer Screen -->
+    <!-- Protected In-App Viewer -->
     <div id="pdfViewerScreen">
         <div class="pdf-topbar">
             <span id="pdfViewerTitle">Study Material</span>
@@ -102,6 +155,7 @@
         <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
     </div>
 
+    <!-- Bottom Nav -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-item active"><i class="fas fa-home"></i><br>Home</a>
         <a href="#" onclick="openSection('paid_classes', 'Batches')" class="nav-item"><i class="fas fa-users"></i><br>Batches</a>
@@ -111,6 +165,21 @@
     </div>
 
     <script>
+        // Hero Banner Auto Slider
+        let currentSlide = 0;
+        const totalSlides = 3;
+        function showSlide(index) {
+            currentSlide = index;
+            document.getElementById('slideTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+        }
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }, 3500);
+
+        // Firebase Setup
         const firebaseConfig = {
             apiKey: "AIzaSyBjmLUMLS2B4ZhRoxhM2QnHClBvLDqtSbc",
             authDomain: "pm-education-88289.firebaseapp.com",
@@ -148,7 +217,6 @@
                         const row = document.createElement('div');
                         row.className = 'item-row';
                         
-                        // PDF sections ke liye In-App Protected Viewer
                         const isPdfSection = ['pdf_notes', 'ebooks', 'syllabus'].includes(path);
                         const clickAction = isPdfSection 
                             ? `openProtectedPdf('${encodeURIComponent(item.url)}', '${encodeURIComponent(item.title)}')`
@@ -167,12 +235,9 @@
         function openProtectedPdf(rawUrl, title) {
             let url = decodeURIComponent(rawUrl);
             const decodedTitle = decodeURIComponent(title);
-            
-            // Google Drive direct preview link conversion
             if (url.includes('drive.google.com')) {
                 url = url.replace(/\/view.*$/, '/preview');
             }
-
             document.getElementById('pdfViewerTitle').innerText = decodedTitle;
             document.getElementById('pdfFrame').src = url;
             document.getElementById('pdfViewerScreen').style.display = 'flex';
@@ -189,5 +254,5 @@
         }
     </script>
 </body>
-            </html>
-                                                                                                                                
+                                                                                                                            </html>
+    
