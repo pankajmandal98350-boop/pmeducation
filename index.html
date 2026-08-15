@@ -9,32 +9,45 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #f4f6f8; padding-bottom: 70px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; padding-bottom: 75px; }
 
         /* Header */
         .top-nav { background: #115286; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: bold; font-size: 18px; }
-        .admin-btn { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 12px; color: white; text-decoration: none; }
+        .logo { font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .admin-btn { background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: white; text-decoration: none; font-weight: 600; }
 
-        /* Banner & Thumbnail */
-        .banner-area { background: #115286; color: white; text-align: center; padding: 10px 15px 20px 15px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
-        .hero-banner { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; border: 2px solid white; }
-        .welcome-text h2 { font-size: 20px; }
-        .welcome-text p { font-size: 12px; opacity: 0.9; }
+        /* Banner */
+        .banner-area { background: #115286; color: white; text-align: center; padding: 20px 15px 30px 15px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; margin-bottom: 15px; }
+        .welcome-text h2 { font-size: 22px; margin-bottom: 5px; }
+        .welcome-text p { font-size: 13px; opacity: 0.9; }
 
-        /* Grid Cards */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: #333; position: relative; font-size: 13px; font-weight: 600; }
-        .badge { position: absolute; top: 5px; right: 5px; font-size: 8px; padding: 2px 5px; border-radius: 4px; color: white; font-weight: bold; }
+        /* Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 15px 15px 15px; }
+        .card { background: white; padding: 18px 10px; border-radius: 14px; text-align: center; box-shadow: 0 3px 8px rgba(0,0,0,0.06); text-decoration: none; color: #333; position: relative; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.1s; }
+        .card:active { transform: scale(0.97); }
+        .card i { font-size: 28px; margin-bottom: 8px; }
+        .badge { position: absolute; top: 8px; right: 8px; font-size: 9px; padding: 2px 6px; border-radius: 4px; color: white; font-weight: bold; }
         .bg-red { background: #ea4335; } .bg-green { background: #22c55e; } .bg-orange { background: #f97316; }
 
         /* Notice Board */
-        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 8px; border-left: 5px solid #115286; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 12px; border-left: 5px solid #115286; box-shadow: 0 3px 8px rgba(0,0,0,0.06); font-size: 14px; line-height: 1.4; }
         
+        /* Modal (Popup for Lists) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; justify-content: center; align-items: flex-end; }
+        .modal-content { background: white; width: 100%; max-height: 80%; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 20px; overflow-y: auto; box-sizing: border-box; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-header h3 { font-size: 17px; color: #115286; }
+        .close-btn { font-size: 24px; font-weight: bold; color: #666; border: none; background: none; cursor: pointer; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
+        .item-title { font-size: 14px; font-weight: 600; color: #1e293b; }
+        .item-btn { background: #115286; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; }
+
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
-        .nav-item { text-align: center; font-size: 10px; color: #666; text-decoration: none; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #e2e8f0; z-index: 50; }
+        .nav-item { text-align: center; font-size: 11px; color: #64748b; text-decoration: none; }
+        .nav-item.active { color: #115286; font-weight: bold; }
+        .nav-item i { font-size: 18px; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -45,8 +58,6 @@
     </div>
 
     <div class="banner-area">
-        <!-- RWA Style Hero Banner / Thumbnail -->
-        <img src="https://via.placeholder.com/400x200" class="hero-banner" alt="Thumbnail">
         <div class="welcome-text">
             <h2>Welcome Student!</h2>
             <p>PM EDUCATION - Apne sapno ko do nayi udaan</p>
@@ -54,26 +65,37 @@
     </div>
 
     <div class="grid">
-        <a href="#" class="card"><span class="badge bg-orange">PREMIUM</span><i class="fas fa-laptop" style="color:#f97316; font-size:24px;"></i><br>Paid Classes</a>
-        <a href="#" class="card"><span class="badge bg-green">FREE</span><i class="fas fa-video" style="color:#22c55e; font-size:24px;"></i><br>Free Courses</a>
-        <a href="#" class="card"><span class="badge bg-green">FREE</span><i class="fas fa-edit" style="color:#2563eb; font-size:24px;"></i><br>Free Test</a>
-        <a href="#" class="card"><span class="badge bg-red">PRO</span><i class="fas fa-file-signature" style="color:#2563eb; font-size:24px;"></i><br>Paid Test Series</a>
-        <a href="#" class="card"><i class="fas fa-file-pdf" style="color:#ea4335; font-size:24px;"></i><br>PDF Notes</a>
-        <a href="#" class="card"><i class="fas fa-book" style="color:#f59e0b; font-size:24px;"></i><br>E-Books</a>
-        <a href="#" class="card"><i class="fas fa-list" style="color:#0d9488; font-size:24px;"></i><br>Syllabus</a>
-        <a href="#" class="card"><i class="fas fa-newspaper" style="color:#f59e0b; font-size:24px;"></i><br>Latest News</a>
+        <div class="card" onclick="openSection('paid_classes', 'Paid Classes')"><span class="badge bg-orange">PREMIUM</span><i class="fas fa-laptop" style="color:#f97316;"></i><br>Paid Classes</div>
+        <div class="card" onclick="openSection('free_classes', 'Free Courses')"><span class="badge bg-green">FREE</span><i class="fas fa-video" style="color:#22c55e;"></i><br>Free Courses</div>
+        <div class="card" onclick="openSection('free_tests', 'Free Test')"><span class="badge bg-green">FREE</span><i class="fas fa-edit" style="color:#2563eb;"></i><br>Free Test</div>
+        <div class="card" onclick="openSection('paid_tests', 'Paid Test Series')"><span class="badge bg-red">PRO</span><i class="fas fa-file-signature" style="color:#2563eb;"></i><br>Paid Test Series</div>
+        <div class="card" onclick="openSection('pdf_notes', 'PDF Notes')"><i class="fas fa-file-pdf" style="color:#ea4335;"></i><br>PDF Notes</div>
+        <div class="card" onclick="openSection('ebooks', 'E-Books')"><i class="fas fa-book" style="color:#f59e0b;"></i><br>E-Books</div>
+        <div class="card" onclick="openSection('syllabus', 'Syllabus')"><i class="fas fa-list" style="color:#0d9488;"></i><br>Syllabus</div>
+        <div class="card" onclick="openSection('app_news', 'Latest News')"><i class="fas fa-newspaper" style="color:#f59e0b;"></i><br>Latest News</div>
     </div>
 
     <div class="notice-box">
         <b>📢 Notice Board:</b> <span id="liveNotice">Loading...</span>
     </div>
 
+    <!-- Popup Modal -->
+    <div id="contentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Study Material</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalList">Data load ho raha hai...</div>
+        </div>
+    </div>
+
     <div class="bottom-nav">
-        <a href="#" class="nav-item"><i class="fas fa-home"></i><br>Home</a>
-        <a href="#" class="nav-item"><i class="fas fa-users"></i><br>Batches</a>
-        <a href="#" class="nav-item"><i class="fas fa-edit"></i><br>Tests</a>
-        <a href="#" class="nav-item"><i class="fas fa-book"></i><br>Notes</a>
-        <a href="#" class="nav-item"><i class="fas fa-newspaper"></i><br>News</a>
+        <a href="index.html" class="nav-item active"><i class="fas fa-home"></i><br>Home</a>
+        <a href="#" onclick="openSection('paid_classes', 'Batches')" class="nav-item"><i class="fas fa-users"></i><br>Batches</a>
+        <a href="#" onclick="openSection('free_tests', 'Tests')" class="nav-item"><i class="fas fa-edit"></i><br>Tests</a>
+        <a href="#" onclick="openSection('pdf_notes', 'Notes')" class="nav-item"><i class="fas fa-book"></i><br>Notes</a>
+        <a href="#" onclick="openSection('app_news', 'News')" class="nav-item"><i class="fas fa-newspaper"></i><br>News</a>
     </div>
 
     <script>
@@ -86,10 +108,49 @@
             messagingSenderId: "598427015572",
             appId: "1:598427015572:web:f27269e9aacbd2c3d01781"
         };
-        firebase.initializeApp(firebaseConfig);
-        firebase.database().ref('app_news').on('value', snap => {
-            document.getElementById('liveNotice').innerText = snap.val() ? snap.val().content : "No update";
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Realtime Notice
+        db.ref('app_news').on('value', snap => {
+            const val = snap.val();
+            document.getElementById('liveNotice').innerText = val ? (val.content || "No update available") : "No update available";
         });
+
+        // Open Section List
+        function openSection(path, title) {
+            document.getElementById('modalTitle').innerText = title;
+            const listContainer = document.getElementById('modalList');
+            listContainer.innerHTML = '<p style="text-align:center; color:#666;">Loading items...</p>';
+            document.getElementById('contentModal').style.display = 'flex';
+
+            db.ref(path).once('value', snap => {
+                const data = snap.val();
+                listContainer.innerHTML = '';
+                if (!data) {
+                    listContainer.innerHTML = '<p style="text-align:center; color:#888; padding:20px 0;">Abhi is section me koi content uplabdh nahi hai.</p>';
+                    return;
+                }
+                
+                Object.keys(data).forEach(key => {
+                    const item = data[key];
+                    if (item && item.title && item.url) {
+                        const row = document.createElement('div');
+                        row.className = 'item-row';
+                        row.innerHTML = `
+                            <div class="item-title">${item.title}</div>
+                            <a href="${item.url}" target="_blank" class="item-btn">Open / View</a>
+                        `;
+                        listContainer.appendChild(row);
+                    }
+                });
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('contentModal').style.display = 'none';
+        }
     </script>
 </body>
-</html>
+    </html>
+    
