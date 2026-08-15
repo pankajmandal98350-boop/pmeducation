@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM Education Admin Panel</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f1f5f9; padding: 20px; }
+        .box { background: white; padding: 20px; border-radius: 12px; max-width: 450px; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { color: #115286; font-size: 18px; margin-bottom: 12px; }
+        textarea, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e1; box-sizing: border-box; font-size: 14px; }
+        button { background: #115286; color: white; border: none; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>📢 Update Notice Board</h2>
+        <textarea id="noticeInput" rows="4" placeholder="Notice yahan likhein..."></textarea>
+        <button onclick="updateNotice()">Update Notice</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjmLUMLS2B4ZhRoxhM2QnHClBvLDqtSbc",
+            authDomain: "pm-education-88289.firebaseapp.com",
+            databaseURL: "https://pm-education-88289-default-rtdb.firebaseio.com",
+            projectId: "pm-education-88289",
+            storageBucket: "pm-education-88289.firebasestorage.app",
+            messagingSenderId: "598427015572",
+            appId: "1:598427015572:web:f27269e9aacbd2c3d01781"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function updateNotice() {
+            const text = document.getElementById('noticeInput').value;
+            if(!text) return alert("Kuch likhiye!");
+            db.ref('app_news').set({ content: text }).then(() => alert("Notice Live Ho Gaya!"));
+        }
+    </script>
+</body>
+</html>
