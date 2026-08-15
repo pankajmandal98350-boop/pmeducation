@@ -9,20 +9,62 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #f1f5f9; padding: 20px 15px; display: none; } /* Initially Hidden */
+        body { background: #f1f5f9; padding: 20px 15px; display: none; }
         .box { background: white; padding: 20px; border-radius: 12px; max-width: 450px; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
         h2 { color: #115286; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
         button { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; background: #16a34a; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Admin Content -->
-    <div class="box"><h2><i class="fas fa-laptop"></i> Add Paid Class</h2><input type="text" id="paidClassName" placeholder="Class Name"><input type="text" id="paidClassLink" placeholder="Class Link"><button onclick="uploadClass('paid_classes', 'paidClassName', 'paidClassLink')">Add Paid Class</button></div>
-    <div class="box"><h2><i class="fas fa-video"></i> Add Free Course</h2><input type="text" id="freeClassName" placeholder="Course Name"><input type="text" id="freeClassLink" placeholder="Video Link"><button onclick="uploadClass('free_classes', 'freeClassName', 'freeClassLink')">Add Free Course</button></div>
-    <div class="box"><h2><i class="fas fa-edit"></i> Add Test</h2><select id="testType"><option value="free_tests">Free Test</option><option value="paid_tests">Paid Test Series</option></select><input type="text" id="testName" placeholder="Test Name"><input type="text" id="testLink" placeholder="Link"><button onclick="uploadTest()">Add Test</button></div>
-    <div class="box"><h2><i class="fas fa-file-pdf"></i> Upload Material</h2><select id="materialType"><option value="pdf_notes">PDF Notes</option><option value="ebooks">E-Books</option><option value="syllabus">Syllabus</option></select><input type="text" id="materialTitle" placeholder="Title"><input type="text" id="materialLink" placeholder="Link"><button onclick="uploadMaterial()">Upload Material</button></div>
+    <!-- 1. Post News / Notice -->
+    <div class="box">
+        <h2><i class="fas fa-bullhorn"></i> Update Notice / News</h2>
+        <textarea id="newsText" rows="3" placeholder="Yahan naya notice ya news likhein..."></textarea>
+        <button onclick="uploadNews()">Publish News</button>
+    </div>
+
+    <!-- 2. Add Paid Class -->
+    <div class="box">
+        <h2><i class="fas fa-laptop"></i> Add Paid Class</h2>
+        <input type="text" id="paidClassName" placeholder="Class Name">
+        <input type="text" id="paidClassLink" placeholder="Class Link">
+        <button onclick="uploadClass('paid_classes', 'paidClassName', 'paidClassLink')">Add Paid Class</button>
+    </div>
+
+    <!-- 3. Add Free Course -->
+    <div class="box">
+        <h2><i class="fas fa-video"></i> Add Free Course</h2>
+        <input type="text" id="freeClassName" placeholder="Course Name">
+        <input type="text" id="freeClassLink" placeholder="Video Link">
+        <button onclick="uploadClass('free_classes', 'freeClassName', 'freeClassLink')">Add Free Course</button>
+    </div>
+
+    <!-- 4. Add Test -->
+    <div class="box">
+        <h2><i class="fas fa-edit"></i> Add Test</h2>
+        <select id="testType">
+            <option value="free_tests">Free Test</option>
+            <option value="paid_tests">Paid Test Series</option>
+        </select>
+        <input type="text" id="testName" placeholder="Test Name">
+        <input type="text" id="testLink" placeholder="Link">
+        <button onclick="uploadTest()">Add Test</button>
+    </div>
+
+    <!-- 5. Upload Material -->
+    <div class="box">
+        <h2><i class="fas fa-file-pdf"></i> Upload Material</h2>
+        <select id="materialType">
+            <option value="pdf_notes">PDF Notes</option>
+            <option value="ebooks">E-Books</option>
+            <option value="syllabus">Syllabus</option>
+        </select>
+        <input type="text" id="materialTitle" placeholder="Title">
+        <input type="text" id="materialLink" placeholder="Link">
+        <button onclick="uploadMaterial()">Upload Material</button>
+    </div>
 
     <script>
         const firebaseConfig = {
@@ -53,11 +95,19 @@
                 alert("Galat Password! Attempt record ho gaya hai.");
                 window.location.href = "index.html";
             } else {
-                document.body.style.display = 'block'; // Show page
+                document.body.style.display = 'block';
             }
         }
 
         // Functions
+        function uploadNews() {
+            const text = document.getElementById('newsText').value;
+            if(!text) return alert("Kuch likhein!");
+            db.ref('app_news').set({ content: text }).then(() => {
+                alert("Notice Update Ho Gaya!");
+                document.getElementById('newsText').value = '';
+            });
+        }
         function uploadClass(dbRef, nameId, linkId) {
             const name = document.getElementById(nameId).value;
             const link = document.getElementById(linkId).value;
@@ -78,5 +128,4 @@
         }
     </script>
 </body>
-                                                                                                                                                                                                                                                               </html>
-    
+</html>
