@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM EDUCATION</title>
+    <!-- Icons & Firebase -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #f4f6f8; padding-bottom: 70px; }
+
+        /* Header */
+        .top-nav { background: #115286; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; font-size: 18px; }
+        .admin-btn { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 12px; color: white; text-decoration: none; }
+
+        /* Banner & Thumbnail */
+        .banner-area { background: #115286; color: white; text-align: center; padding: 10px 15px 20px 15px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        .hero-banner { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; border: 2px solid white; }
+        .welcome-text h2 { font-size: 20px; }
+        .welcome-text p { font-size: 12px; opacity: 0.9; }
+
+        /* Grid Cards */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-decoration: none; color: #333; position: relative; font-size: 13px; font-weight: 600; }
+        .badge { position: absolute; top: 5px; right: 5px; font-size: 8px; padding: 2px 5px; border-radius: 4px; color: white; font-weight: bold; }
+        .bg-red { background: #ea4335; } .bg-green { background: #22c55e; } .bg-orange { background: #f97316; }
+
+        /* Notice Board */
+        .notice-box { background: white; margin: 0 15px 15px 15px; padding: 15px; border-radius: 8px; border-left: 5px solid #115286; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
+        .nav-item { text-align: center; font-size: 10px; color: #666; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <div class="logo"><i class="fas fa-graduation-cap"></i> PM EDUCATION</div>
+        <a href="admin.html" class="admin-btn">Admin Panel</a>
+    </div>
+
+    <div class="banner-area">
+        <!-- RWA Style Hero Banner / Thumbnail -->
+        <img src="https://via.placeholder.com/400x200" class="hero-banner" alt="Thumbnail">
+        <div class="welcome-text">
+            <h2>Welcome Student!</h2>
+            <p>PM EDUCATION - Apne sapno ko do nayi udaan</p>
+        </div>
+    </div>
+
+    <div class="grid">
+        <a href="#" class="card"><span class="badge bg-orange">PREMIUM</span><i class="fas fa-laptop" style="color:#f97316; font-size:24px;"></i><br>Paid Classes</a>
+        <a href="#" class="card"><span class="badge bg-green">FREE</span><i class="fas fa-video" style="color:#22c55e; font-size:24px;"></i><br>Free Courses</a>
+        <a href="#" class="card"><span class="badge bg-green">FREE</span><i class="fas fa-edit" style="color:#2563eb; font-size:24px;"></i><br>Free Test</a>
+        <a href="#" class="card"><span class="badge bg-red">PRO</span><i class="fas fa-file-signature" style="color:#2563eb; font-size:24px;"></i><br>Paid Test Series</a>
+        <a href="#" class="card"><i class="fas fa-file-pdf" style="color:#ea4335; font-size:24px;"></i><br>PDF Notes</a>
+        <a href="#" class="card"><i class="fas fa-book" style="color:#f59e0b; font-size:24px;"></i><br>E-Books</a>
+        <a href="#" class="card"><i class="fas fa-list" style="color:#0d9488; font-size:24px;"></i><br>Syllabus</a>
+        <a href="#" class="card"><i class="fas fa-newspaper" style="color:#f59e0b; font-size:24px;"></i><br>Latest News</a>
+    </div>
+
+    <div class="notice-box">
+        <b>📢 Notice Board:</b> <span id="liveNotice">Loading...</span>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-item"><i class="fas fa-home"></i><br>Home</a>
+        <a href="#" class="nav-item"><i class="fas fa-users"></i><br>Batches</a>
+        <a href="#" class="nav-item"><i class="fas fa-edit"></i><br>Tests</a>
+        <a href="#" class="nav-item"><i class="fas fa-book"></i><br>Notes</a>
+        <a href="#" class="nav-item"><i class="fas fa-newspaper"></i><br>News</a>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjmLUMLS2B4ZhRoxhM2QnHClBvLDqtSbc",
+            authDomain: "pm-education-88289.firebaseapp.com",
+            databaseURL: "https://pm-education-88289-default-rtdb.firebaseio.com",
+            projectId: "pm-education-88289",
+            storageBucket: "pm-education-88289.firebasestorage.app",
+            messagingSenderId: "598427015572",
+            appId: "1:598427015572:web:f27269e9aacbd2c3d01781"
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.database().ref('app_news').on('value', snap => {
+            document.getElementById('liveNotice').innerText = snap.val() ? snap.val().content : "No update";
+        });
+    </script>
+</body>
+</html>
