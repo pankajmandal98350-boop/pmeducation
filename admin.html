@@ -4,23 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PM Education Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f1f5f9; padding: 20px; }
-        .box { background: white; padding: 20px; border-radius: 12px; max-width: 450px; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        h2 { color: #115286; font-size: 18px; margin-bottom: 12px; }
-        textarea, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e1; box-sizing: border-box; font-size: 14px; }
-        button { background: #115286; color: white; border: none; font-weight: bold; cursor: pointer; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #f1f5f9; padding: 20px 15px 40px 15px; }
+        .header { text-align: center; margin-bottom: 20px; color: #115286; }
+        .box { background: white; padding: 20px; border-radius: 12px; max-width: 480px; margin: 0 auto 20px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+        h2 { color: #115286; font-size: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: #115286; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 14px; font-weight: bold; color: white; background: #16a34a; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+        .btn-blue { background: #115286; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #115286; text-decoration: none; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>📢 Update Notice Board</h2>
-        <textarea id="noticeInput" rows="4" placeholder="Notice yahan likhein..."></textarea>
-        <button onclick="updateNotice()">Update Notice</button>
+    <div class="header">
+        <h2>PM EDUCATION ADMIN PANEL</h2>
     </div>
+
+    <!-- 1. Add Test Series -->
+    <div class="box">
+        <h2><i class="fas fa-edit"></i> Add Test Series</h2>
+        <select id="testType">
+            <option value="free_tests">Free Test</option>
+            <option value="paid_tests">Paid Test Series</option>
+        </select>
+        <input type="text" id="testName" placeholder="Test Name (e.g. Maths Chapter 1)">
+        <input type="text" id="testLink" placeholder="Google Form / Quiz Link">
+        <button onclick="uploadTest()">Add Test</button>
+    </div>
+
+    <!-- 2. Upload Study Material / PDF -->
+    <div class="box">
+        <h2><i class="fas fa-file-pdf"></i> Upload Study Material</h2>
+        <select id="materialType">
+            <option value="pdf_notes">PDF Notes</option>
+            <option value="ebooks">E-Books</option>
+            <option value="syllabus">Syllabus</option>
+        </select>
+        <input type="text" id="materialTitle" placeholder="Material Title (e.g. Shortcut key)">
+        <input type="text" id="materialLink" placeholder="PDF Google Drive Link">
+        <button onclick="uploadMaterial()">Upload PDF</button>
+    </div>
+
+    <!-- 3. Post Notice / News -->
+    <div class="box">
+        <h2><i class="fas fa-newspaper"></i> Post Latest News / Notice</h2>
+        <textarea id="noticeInput" rows="3" placeholder="Notice / News likhein..."></textarea>
+        <button class="btn-blue" onclick="updateNotice()">Post News</button>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Student App</a>
 
     <script>
         const firebaseConfig = {
@@ -35,10 +74,59 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // Upload Test
+        function uploadTest() {
+            const type = document.getElementById('testType').value;
+            const name = document.getElementById('testName').value.trim();
+            const link = document.getElementById('testLink').value.trim();
+
+            if (!name || !link) {
+                return alert("Test Name aur Link dono bharein!");
+            }
+
+            db.ref(type).push({
+                title: name,
+                url: link,
+                date: new Date().toLocaleDateString()
+            }).then(() => {
+                alert("Test Successfully Add Ho Gaya!");
+                document.getElementById('testName').value = '';
+                document.getElementById('testLink').value = '';
+            }).catch(err => alert("Error: " + err.message));
+        }
+
+        // Upload PDF / Material
+        function uploadMaterial() {
+            const type = document.getElementById('materialType').value;
+            const title = document.getElementById('materialTitle').value.trim();
+            const link = document.getElementById('materialLink').value.trim();
+
+            if (!title || !link) {
+                return alert("Title aur Drive Link dono bharein!");
+            }
+
+            db.ref(type).push({
+                title: title,
+                url: link,
+                date: new Date().toLocaleDateString()
+            }).then(() => {
+                alert("Material Successfully Upload Ho Gaya!");
+                document.getElementById('materialTitle').value = '';
+                document.getElementById('materialLink').value = '';
+            }).catch(err => alert("Error: " + err.message));
+        }
+
+        // Update Notice
         function updateNotice() {
-            const text = document.getElementById('noticeInput').value;
-            if(!text) return alert("Kuch likhiye!");
-            db.ref('app_news').set({ content: text }).then(() => alert("Notice Live Ho Gaya!"));
+            const text = document.getElementById('noticeInput').value.trim();
+            if (!text) return alert("Kuch likhiye!");
+
+            db.ref('app_news').set({
+                content: text
+            }).then(() => {
+                alert("Notice Live Ho Gaya!");
+                document.getElementById('noticeInput').value = '';
+            }).catch(err => alert("Error: " + err.message));
         }
     </script>
 </body>
