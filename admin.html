@@ -99,15 +99,23 @@
             }
         }
 
-        // Functions
         function uploadNews() {
-            const text = document.getElementById('newsText').value;
-            if(!text) return alert("Kuch likhein!");
-            db.ref('app_news').set({ content: text }).then(() => {
-                alert("Notice Update Ho Gaya!");
-                document.getElementById('newsText').value = '';
-            });
+    const text = document.getElementById('newsText').value;
+    if(!text) return alert("Kuch likhein!");
+    
+    // 1. All News history save karega
+    db.ref('all_news').push({
+        content: text,
+        date: new Date().toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    });
+            
+    // 2. Main Notice Board update karega
+    db.ref('app_news').set({ content: text });
+
+    alert("News Publish Ho Gayi!");
+    document.getElementById('newsText').value = '';
         }
+        
         function uploadClass(dbRef, nameId, linkId) {
             const name = document.getElementById(nameId).value;
             const link = document.getElementById(linkId).value;
